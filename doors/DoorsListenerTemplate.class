@@ -1,0 +1,56 @@
+
+/* Doors.java */
+package net.sleepyvalley.ancienttom.doors;
+
+import java.util.HashMap;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.plugin.java.JavaPlugin;
+import com.mewin.WGRegionEvents.events.RegionEnterEvent;
+import com.mewin.WGRegionEvents.events.RegionLeaveEvent;
+import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+
+/**
+* @author AncientTom
+* Contact info: AncientTom@MC-Hosts.com
+*               Skype: AncientTom
+*/
+public class Doors extends JavaPlugin implements Listener {
+ 
+    private HashMap<ProtectedRegion, Integer> regions; // this hashmap stores any regions for which the event has been fired along with their entries integer
+    private String regionID;
+ 
+    @Override
+    public void onEnable() {
+        regions = new HashMap<>();
+        getServer().getPluginManager().registerEvents(this, this);
+    }
+
+    @Override
+    public void onDisable() {
+    }
+
+    @EventHandler
+    public void onRegionEnter(RegionEnterEvent event) {
+        ProtectedRegion region = event.getRegion(); // is that the method??
+        regionID = event.getRegion().getId();
+        if (!regions.containsKey(region)) { // the event hasn't been called for this event before
+            regions.put(region, 1); // put the region in the map and set the integer to 1
+        } else { // it has been called for this region before
+            regions.put(region, regions.get(region) + 1); // increase the integer
+        }
+          event.getPlayer().sendMessage("There are now " + regions.get(region) + " in the " + regionID + " doorway");
+   
+    }
+
+    @EventHandler
+    public void onRegionLeave(RegionLeaveEvent event) {
+        ProtectedRegion region = event.getRegion();
+        regionID = event.getRegion().getId();
+        if (regions.get(region) > 0) {
+            regions.put(region, regions.get(region) - 1);
+              event.getPlayer().sendMessage("There are now " + regions.get(region) + " in the " + regionID + " doorway");
+        }
+    }
+
+}

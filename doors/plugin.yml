@@ -1,0 +1,4 @@
+name: Doors
+main: net.sleepyvalley.ancienttom.doors.Doors
+version: 1.0
+description: This is the start of my automated door opening plugin.
